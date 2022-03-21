@@ -72,8 +72,14 @@ body, button {
         &__logics--bis { //Botones adicionales para animar el gráfico
             display: flex;
             justify-content: center;
+            align-items: center;
 
             margin-top: 8px;
+
+            select {
+                margin-left: 8px;
+                height: 32px;
+            }
         }
         
         //Debajo de todos los elementos lógicos tendremos la leyenda > Puede haber de 1 a 7 elementos dentro de la leyenda
@@ -122,18 +128,8 @@ body, button {
 
         //Visualización
         &__viz {
-            height: 450px;
+            height: 420px;
             margin-top: 12px;
-
-            .chart__linear:not(:first-child) {
-                margin-top: 12px;
-            }
-
-            //Visualizaciones
-            #linear--first, #linear--second, #linear--third {
-                width: 100%;
-                height: 150px;
-            }
 
             & .tick text {
                 font-family: 'Titillium Web';

@@ -18,14 +18,14 @@
             <section class="content b-chart active" id="chartBlock">
                 <div class="b-title">
                     <h1 class="title" id="title">Figura 3.8. Evolución de la tasa de riesgo de pobreza por grupo de edad en España, 2008-2020</h1>
-                    <h2 class="subtitle" id="subtitle">Datos en porcentajes (%). Las líneas más pronunciadas de cada gráfico corresponden al sexo marcado; las líneas más opacas/claras, a los otros sexos para permitir una mejor comparativa por edad y sexo</h2>
+                    <h2 class="subtitle" id="subtitle">Datos en porcentajes (%). Las líneas más pronunciadas corresponden al sexo marcado; las líneas más opacas/claras, al otro, para permitir una mejor comparativa por edad y sexo</h2>
                 </div>
                 <div class="chart__logics">
                     <div class="chart__legend">
-                        <span class="chart__legend--item primary_1">De 16 a 29 años </span>
-                        <span class="chart__legend--item comp_2">De 30 a 44</span>
+                        <span class="chart__legend--item comp_2">De 16 a 29 años </span>
+                        <span class="chart__legend--item primary_1">De 30 a 44</span>
                         <span class="chart__legend--item comp_1">De 45 a 64</span>
-                        <span class="chart__legend--item other_1">De 65 y más</span>
+                        <span class="chart__legend--item other_2">De 65 y más</span>
                     </div>
                     <div class="chart__animate" id="replay">
                         <button class="btn btn__animate">
@@ -34,20 +34,14 @@
                         </button>
                     </div>                  
                 </div>
-                <div class="chart__viz" id="chart">
-                    <div class="chart__linear">
-                        <p>Total</p>
-                        <div id="linear--first"></div>
-                    </div>
-                    <div class="chart__linear">
-                        <p>Mujeres</p>
-                        <div id="linear--second"></div>
-                    </div>
-                    <div class="chart__linear">
-                        <p>Hombres</p>
-                        <div id="linear--third"></div>
-                    </div>
+                <div class="chart__logics--bis">
+                    <p>Seleccione qué sexo desea que se visualice con líneas más pronunciadas</p>
+                    <select name="sex" id="viz_sex">
+                        <option value="Mujeres">Mujeres</option>
+                        <option value="Hombres">Hombres</option>
+                      </select>
                 </div>
+                <div class="chart__viz" id="chart"></div>
                 <!-- Pie de gráfico -->
                 <div class="chart__footer">
                     <div class="chart__source">

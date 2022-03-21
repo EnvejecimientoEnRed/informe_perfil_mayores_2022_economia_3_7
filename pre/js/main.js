@@ -16,5 +16,5 @@ function getUrlParams() {
     //Visualización y tipo de iframe
     const iframe = params.get('iframe');
 
-    setChart(iframe);
+    initChart(iframe);
 }
