@@ -21,7 +21,7 @@ COLOR_OTHER_2 = '#731854';
 
 export function initChart(iframe) {
     //Desarrollo del gráfico
-    d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_economia_3_8/main/data/riesgo_pobreza_edad_sexo_v2.csv', function(error,data) {
+    d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_economia_3_7/main/data/riesgo_pobreza_edad_sexo_v2.csv', function(error,data) {
         if (error) throw error;
 
         data = data.filter(function(item){if(item.Sexo != 'Ambos sexos'){ return item; }});
@@ -152,7 +152,7 @@ export function initChart(iframe) {
         /////
 
         //Iframe
-        setFixedIframeUrl('informe_perfil_mayores_economia_3_8','evolucion_tasa_pobreza');
+        setFixedIframeUrl('informe_perfil_mayores_economia_3_7','evolucion_tasa_pobreza');
 
         //Redes sociales > Antes tenemos que indicar cuál sería el texto a enviar
         setRRSSLinks('evolucion_tasa_pobreza');
