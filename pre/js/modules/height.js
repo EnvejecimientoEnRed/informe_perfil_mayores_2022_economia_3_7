@@ -7,7 +7,7 @@ function setChartHeight(iframe) {
         document.getElementsByClassName('container')[0].style.height = '688px';
         document.getElementsByClassName('main')[0].style.height = '656px';
 
-        let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight < 54 ? 54 : document.getElementsByClassName('b-title')[0].clientHeight;
+        let titleBlock = document.getElementsByClassName('b-title')[0].clientHeight < 65 ? 65 : document.getElementsByClassName('b-title')[0].clientHeight;
         let logicBlock = document.getElementsByClassName('chart__logics')[0].clientHeight;
         let footerBlock = document.getElementsByClassName('chart__footer')[0].clientHeight;
         let footerTop = 8, containerPadding = 8;
