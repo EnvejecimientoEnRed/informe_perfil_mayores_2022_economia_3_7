@@ -92,7 +92,8 @@ button {
         &__legend {
             display: flex;
             flex-wrap: wrap;
-            
+
+            width: calc(100% - 141px);
 
             &--item {
                 position: relative;
@@ -135,36 +136,42 @@ button {
 
         //Visualización
         &__viz {
-            height: 420px;
             margin-top: 8px;
+            //Títulos en ejes > En otra parte
 
-            & .tick text {
-                font-family: 'Montserrat';
-                font-style: normal;
-                font-weight: 300;
-                font-size: 12px;
-                line-height: 10px;
-            
-                color: #A3A3A3;
-            }
+            //Visualización
+            .chart {
+                height: 406px;
 
-            .domain {
-                stroke: #262626;
-                stroke-width: 1px;
-            }
-            
-            & .tick line {
-                stroke: #262626;
-                opacity: 0.7;
-                stroke-dasharray: 5;
-                stroke-width: 0.5px;
-            }
-            
-            & .line-special {
-                stroke: #000 !important;
-                stroke-dasharray: 0 !important;
-                stroke-width: 1px !important;
-            }
+                //Texto y estilos de ejes
+                & .tick text {
+                    font-family: 'Montserrat';
+                    font-style: normal;
+                    font-weight: 300;
+                    font-size: 12px;
+                    line-height: 10px;
+                
+                    color: #262626;
+                }
+
+                .domain {
+                    stroke: #262626;
+                    stroke-width: 1px;
+                }
+                
+                & .tick line {
+                    stroke: #262626;
+                    opacity: 0.7;
+                    stroke-dasharray: 5;
+                    stroke-width: 0.5px;
+                }
+                
+                & .line-special {
+                    stroke: #000 !important;
+                    stroke-dasharray: 0 !important;
+                    stroke-width: 1px !important;
+                }
+            }           
         }
 
         //Pie
@@ -253,10 +260,14 @@ button {
         min-height: 32px;
 
         border: 1.2px solid;
-        background-color: #fcfcfc;      
+        color: #262626;
+        background-color: #c0e1e2;       
+        &:hover { background-color: #cacbcd; }
 
         &.active {
-            background-color: #fff;
+            background-color: #1b1c1d;
+            color: #fff;
+            &:hover { background-color: #27292a; }   
         }
     }
 
@@ -274,16 +285,40 @@ button {
         width: auto;
         max-width: 120px;
         height: 32px;
-        border: 0.6px solid #E37A42;
-        background-color: #d4d4d4;
+        border: 0px;
+        color: #262626;
+        background-color: #e0e1e2;       
+        &:hover { background-color: #cacbcd; }
 
         &.active {
-            background-color: #fff;
+            background-color: #1b1c1d;
+            color: #fff;
+            &:hover { background-color: #27292a; }   
         }
 
         &:first-of-type {margin-right: 8px;}
         &:last-of-type {margin-left: 8px;}
     }
+
+    &__yaxis {
+        cursor: pointer;
+
+        width: 140px;
+        height: 32px;
+        border: 0px;
+        background-color: #1b1c1d;
+        color: #fff;
+        &:hover { background-color: #27292a; }
+
+        margin-left: 16px;
+    }
+}
+
+//Selector específico
+.select {
+    cursor: pointer;
+    width: 140px;
+    height: 32px;
 }
 
 .text {
@@ -310,6 +345,28 @@ button {
         & + .text__header {
             margin-top: 24px;
         }
+    }
+
+    &__yaxis {
+        font-size: 0.8em;
+        line-height: 1.25em;
+        font-weight: 400;
+        color: #262626;
+    }
+
+    &__xaxis {
+        font-size: 0.8em;
+        line-height: 1.25em;
+        font-weight: 400;
+        color: #262626;
+        text-align: center;
+    }
+
+    &__specification {
+        font-size: 0.85em;
+        line-height: 1.25em;
+        font-weight: 400;
+        margin-top: 8px;
     }
 }
 
@@ -407,6 +464,16 @@ button {
         font-size: 12px;
         line-height: 1.1;
         color: #262626;
+    }
+
+    &--title_2 {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1.1;
+        color: #262626;
+
+        margin-top: 4px;
     }
 
     &--text {

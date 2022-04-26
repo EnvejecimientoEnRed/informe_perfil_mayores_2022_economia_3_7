@@ -1,39 +1,33 @@
 //Desarrollo de las visualizaciones
 import * as d3 from 'd3';
-//import { numberWithCommas2 } from './helpers';
-//import { getInTooltip, getOutTooltip, positionTooltip } from './modules/tooltip';
+import { numberWithCommas3 } from '../helpers';
+import { getInTooltip, getOutTooltip, positionTooltip } from '../modules/tooltip';
 import { setChartHeight } from '../modules/height';
 import { setChartCanvas, setChartCanvasImage } from '../modules/canvas-image';
 import { setRRSSLinks } from '../modules/rrss';
 import { setFixedIframeUrl } from './chart_helpers';
 
 //Colores fijos
-const COLOR_PRIMARY_1 = '#F8B05C', 
-COLOR_PRIMARY_2 = '#E37A42',
-COLOR_COMP_1 = '#528FAD', 
-COLOR_COMP_2 = '#AADCE0',
-COLOR_GREY_1 = '#D6D6D6', 
-COLOR_GREY_2 = '#A3A3A3',
-COLOR_ANAG__PRIM_1 = '#BA9D5F', 
+const COLOR_PRIMARY_1 = '#F8B05C',
+COLOR_ANAG_PRIM_1 = '#BA9D5F', 
 COLOR_ANAG_PRIM_2 = '#9E6C51',
-COLOR_ANAG_PRIM_3 = '#9E3515',
-COLOR_ANAG_COMP_1 = '#1C5A5E';
+COLOR_ANAG_PRIM_3 = '#9E3515';
+let tooltip = d3.select('#tooltip');
 
 export function initChart(iframe) {
     //Desarrollo del gráfico
     d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_economia_3_7/main/data/riesgo_pobreza_edad_sexo_v2.csv', function(error,data) {
         if (error) throw error;
 
-        data = data.filter(function(item){if(item.Sexo != 'Ambos sexos'){ return item; }});
-
         ///// Desarrollo de los tres gráficos
-        let currentSex = 'Mujeres';
+        let paths;
+        let currentSex = 'Ambos sexos';
 
-        let margin = {top: 10, right: 10, bottom: 30, left: 35},
+        let margin = {top: 10, right: 10, bottom: 25, left: 30},
             width = document.getElementById('chart').clientWidth - margin.left - margin.right,
             height = document.getElementById('chart').clientHeight - margin.top - margin.bottom;
 
-        let sumstat = d3.nest() // nest function allows to group the calculation per level of a factor
+        let sumstat = d3.nest()
             .key(function(d) { return d.Sexo + '-' + d.Edad;})
             .entries(data);
 
@@ -49,24 +43,50 @@ export function initChart(iframe) {
         let x = d3.scaleBand()
             .domain(d3.map(data, function(d) { return d.Periodo; }).keys())
             .range([ 0, width ]);
+
+        let xAxis = function(g) {
+            g.call(d3.axisBottom(x).tickValues(x.domain().filter(function(d,i){ if(i == 0 || i == 3 || i == 6 || i == 9 || i == 12){ return d; } })));
+            g.call(function(g){g.selectAll('.tick line').remove()});
+            g.call(function(g){g.select('.domain').remove()});
+        }
+
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x));
+            .call(xAxis);
 
         // Add Y axis
         let y = d3.scaleLinear()
             .domain([0, 35])
             .range([ height, 0 ]);
+        
+        let yAxis = function(svg) {
+            svg.call(d3.axisLeft(y).ticks(5).tickFormat(function(d,i) { return numberWithCommas3(d); }));
+            svg.call(function(g) {
+                g.call(function(g){
+                    g.selectAll('.tick line')
+                        .attr('class', function(d,i) {
+                            if (d == 0) {
+                                return 'line-special';
+                            }
+                        })
+                        .attr('x1', '0%')
+                        .attr('x2', `${width}`)
+                });
+            });
+        }
+
         svg.append("g")
-            .call(d3.axisLeft(y).ticks(7));
+            .attr("class", "yaxis")
+            .call(yAxis);
 
         // color palette
         let res = sumstat.map(function(d){ return d.key; });
         let color = d3.scaleOrdinal()
             .domain(res)
-            .range([COLOR_COMP_2, COLOR_PRIMARY_1, COLOR_COMP_1, COLOR_OTHER_2]);        
+            .range([COLOR_PRIMARY_1, COLOR_ANAG_PRIM_1, COLOR_ANAG_PRIM_2, COLOR_ANAG_PRIM_3]);
 
         function init() {
+            //Líneas
             svg.selectAll(".line")
                 .data(sumstat)
                 .enter()
@@ -75,17 +95,17 @@ export function initChart(iframe) {
                 .attr("fill", "none")
                 .attr("stroke", function(d){ return color(d.key) })
                 .attr("opacity", function(d) {
-                    if(d.key.split('-')[0] == 'Mujeres') {
+                    if(d.key.split('-')[0] == 'Ambos sexos') {
                         return '1';
                     } else {
-                        return '0.5';
+                        return '0.2';
                     }
                 })
                 .attr("stroke-width", function(d) {
-                    if(d.key.split('-')[0] == 'Mujeres') {
+                    if(d.key.split('-')[0] == 'Ambos sexos') {
                         return '3';
                     } else {
-                        return '2';
+                        return '1';
                     }
                 })
                 .attr("d", function(d){
@@ -94,13 +114,90 @@ export function initChart(iframe) {
                         .y(function(d) { return y(+d.Total); })
                         (d.values)
                 });
+
+            //Paths para animación
+            paths = svg.selectAll('.lines');
+    
+            paths.attr("stroke-dasharray", 1000 + " " + 1000)
+                .attr("stroke-dashoffset", 1000)
+                .transition()
+                .ease(d3.easeLinear)
+                .attr("stroke-dashoffset", 0)
+                .duration(2000);
+
+            //Círculos
+            svg.selectAll('circles')
+                .data(data)
+                .enter()
+                .append('circle')
+                .attr('class', function(d) {
+                    return 'circle circle-' + d.Periodo + '-' + d.Sexo.split(' ')[0];
+                })
+                .attr('cx', function(d) {
+                    return x(d.Periodo) + x.bandwidth() / 2;
+                })
+                .attr('cy', function(d) {
+                    return y(+d.Total);
+                })
+                .attr('r', 3)
+                .attr('stroke', 'none')
+                .attr('fill', function(d) {
+                    if(currentSex == d.Sexo) {
+                        return 'transparent';
+                    } else {
+                        return 'none';
+                    }
+                })
+                .on('mouseover', function(d,i,e) {
+                    //Opacidad en círculos
+                    let css = e[i].getAttribute('class').split(' ')[1];
+                    let circles = svg.selectAll('.circle');
+                    
+                    //Solo mostramos los círculos para ese año y para el sexo seleccionado
+                    circles.each(function() {
+                        //this.style.stroke = '0.4';
+                        let split = this.getAttribute('class').split(" ")[1];
+                        if(split == `${css}`) {
+                            this.style.stroke = 'black';
+                            this.style.strokeWidth = '1';
+                        }
+                    });
+
+                    console.log(d);
+
+                    //Texto
+                    let html = '<p class="chart__tooltip--title">' + d.Edad + ' (' + d.Periodo + ')</p>' + 
+                        '<p class="chart__tooltip--text">El riesgo de pobreza para <b>' + d.Sexo.toLowerCase() + '</b> en este grupo de edad es de un <b>' + numberWithCommas3(parseFloat(d.Total).toFixed(1)) + '</b>% para este año</p>';
+                
+                    tooltip.html(html);
+
+                    //Tooltip
+                    positionTooltip(window.event, tooltip);
+                    getInTooltip(tooltip);                                      
+                })
+                .on('mouseout', function(d,i,e) {
+                    //Quitamos los estilos de la línea
+                    let circles = svg.selectAll('.circle');
+                    circles.each(function() {
+                        this.style.stroke = 'none';
+                    });
+                
+                    //Quitamos el tooltip
+                    getOutTooltip(tooltip); 
+                });
         }
 
         function animateChart() {
-
+            paths.attr("stroke-dasharray", 1000 + " " + 1000)
+                .attr("stroke-dashoffset", 1000)
+                .transition()
+                .ease(d3.easeLinear)
+                .attr("stroke-dashoffset", 0)
+                .duration(2000);
         }
 
         function setChart(sex) {
+            //Líneas
             svg.selectAll(".lines")
                 .attr("fill", "none")
                 .attr("stroke", function(d){ return color(d.key) })
@@ -108,14 +205,14 @@ export function initChart(iframe) {
                     if(d.key.split('-')[0] == sex) {
                         return '1';
                     } else {
-                        return '0.5';
+                        return '0.2';
                     }
                 })
                 .attr("stroke-width", function(d) {
                     if(d.key.split('-')[0] == sex) {
                         return '3';
                     } else {
-                        return '2';
+                        return '1';
                     }
                 })
                 .attr("d", function(d){
@@ -123,6 +220,24 @@ export function initChart(iframe) {
                         .x(function(d) { return x(d.Periodo) + x.bandwidth() / 2; })
                         .y(function(d) { return y(+d.Total); })
                         (d.values)
+                });
+
+            //Círculos
+            svg.selectAll('.circle')
+                .attr('cx', function(d) {
+                    return x(d.Periodo) + x.bandwidth() / 2;
+                })
+                .attr('cy', function(d) {
+                    return y(+d.Total);
+                })
+                .attr('r', 3)
+                .attr('stroke', 'none')
+                .attr('fill', function(d) {
+                    if(currentSex == d.Sexo) {
+                        return 'transparent';
+                    } else {
+                        return 'none';
+                    }
                 });
         }
 
