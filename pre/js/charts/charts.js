@@ -14,7 +14,7 @@ COLOR_ANAG_PRIM_2 = '#9E6C51',
 COLOR_ANAG_PRIM_3 = '#9E3515';
 let tooltip = d3.select('#tooltip');
 
-export function initChart(iframe) {
+export function initChart() {
     //Desarrollo del gráfico
     d3.csv('https://raw.githubusercontent.com/CarlosMunozDiazCSIC/informe_perfil_mayores_2022_economia_3_7/main/data/riesgo_pobreza_edad_sexo_v2.csv', function(error,data) {
         if (error) throw error;
@@ -251,12 +251,20 @@ export function initChart(iframe) {
         //Animación del gráfico
         document.getElementById('replay').addEventListener('click', function() {
             animateChart();
+
+            setTimeout(() => {
+                setChartCanvas();
+            }, 4000);
         });
 
         document.getElementById('viz_sex').addEventListener('change', function(e) {
             if(currentSex != e.target.value) {
                 currentSex = e.target.value;
                 setChart(currentSex);
+
+                setTimeout(() => {
+                    setChartCanvas();
+                }, 4000);
             }            
         });
 
@@ -273,7 +281,9 @@ export function initChart(iframe) {
         setRRSSLinks('evolucion_tasa_pobreza');
 
         //Captura de pantalla de la visualización
-        setChartCanvas();
+        setTimeout(() => {
+            setChartCanvas();
+        }, 4000);
 
         let pngDownload = document.getElementById('pngImage');
 
@@ -282,6 +292,6 @@ export function initChart(iframe) {
         });
 
         //Altura del frame
-        setChartHeight(iframe);
+        setChartHeight();
     });       
 }
