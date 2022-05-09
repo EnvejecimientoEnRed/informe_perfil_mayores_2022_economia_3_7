@@ -23,7 +23,7 @@ export function initChart() {
         let paths;
         let currentSex = 'Ambos sexos';
 
-        let margin = {top: 12.5, right: 10, bottom: 25, left: 30},
+        let margin = {top: 12.5, right: 10, bottom: 25, left: 27.5},
             width = document.getElementById('chart').clientWidth - margin.left - margin.right,
             height = document.getElementById('chart').clientHeight - margin.top - margin.bottom;
 
@@ -98,14 +98,14 @@ export function initChart() {
                     if(d.key.split('-')[0] == 'Ambos sexos') {
                         return '1';
                     } else {
-                        return '0.2';
+                        return '0';
                     }
                 })
                 .attr("stroke-width", function(d) {
                     if(d.key.split('-')[0] == 'Ambos sexos') {
                         return '3';
                     } else {
-                        return '1';
+                        return '0';
                     }
                 })
                 .attr("d", function(d){
@@ -167,7 +167,7 @@ export function initChart() {
 
                     //Texto
                     let html = '<p class="chart__tooltip--title">' + d.Edad + ' (' + d.Periodo + ')</p>' + 
-                        '<p class="chart__tooltip--text">El riesgo de pobreza para <b>' + d.Sexo.toLowerCase() + '</b> en este grupo de edad es de un <b>' + numberWithCommas3(parseFloat(d.Total).toFixed(1)) + '</b>% para este año</p>';
+                        '<p class="chart__tooltip--text">El <b>' + numberWithCommas3(parseFloat(d.Total).toFixed(1)) + '</b>% de <b>' + d.Sexo.toLowerCase() + '</b> está en riesgo de pobreza para este grupo de edad y año</p>';
                 
                     tooltip.html(html);
 
@@ -205,14 +205,14 @@ export function initChart() {
                     if(d.key.split('-')[0] == sex) {
                         return '1';
                     } else {
-                        return '0.2';
+                        return '0';
                     }
                 })
                 .attr("stroke-width", function(d) {
                     if(d.key.split('-')[0] == sex) {
                         return '3';
                     } else {
-                        return '1';
+                        return '0';
                     }
                 })
                 .attr("d", function(d){
